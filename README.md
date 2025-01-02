@@ -1,4 +1,4 @@
-# gousdbrl
+# 🌎 gousdbrl
 
 > Fetch USD to BRL exchange rate from [Wise](https://wise.com/)
 
