@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -15,18 +16,35 @@ import (
 	"github.com/tidwall/sjson"
 )
 
-const (
-	fileName         = "data.json"
-	wiseCurrencyPage = "https://wise.com/gb/currency-converter/usd-to-brl-rate?amount=1"
-)
+const appName = "gousdbrl"
+const wiseCurrencyPage = "https://wise.com/gb/currency-converter/usd-to-brl-rate?amount=1"
 
 type Config struct {
 	Value float64
 }
 
+func getConfigFilePath() (string, error) {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", fmt.Errorf("failed to get user config directory: %w", err)
+	}
+
+	appDir := filepath.Join(configDir, "gousdbrl")
+	if err := os.MkdirAll(appDir, 0755); err != nil {
+		return "", fmt.Errorf("failed to create app config directory: %w", err)
+	}
+
+	return filepath.Join(appDir, "data.json"), nil
+}
+
 func loadConfig() (*Config, error) {
+	filePath, err := getConfigFilePath()
+	if err != nil {
+		return nil, err
+	}
+
 	var config Config
-	data, err := os.ReadFile(fileName)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return &Config{Value: 0.0}, nil
@@ -44,9 +62,14 @@ func loadConfig() (*Config, error) {
 }
 
 func saveConfig(config *Config) error {
+	filePath, err := getConfigFilePath()
+	if err != nil {
+		return err
+	}
+
 	data := "{}"
-	if _, err := os.Stat(fileName); err == nil {
-		fileData, _ := os.ReadFile(fileName)
+	if _, err := os.Stat(filePath); err == nil {
+		fileData, _ := os.ReadFile(filePath)
 		data = string(fileData)
 	}
 
@@ -55,7 +78,7 @@ func saveConfig(config *Config) error {
 		return err
 	}
 
-	return os.WriteFile(fileName, []byte(newData), 0644)
+	return os.WriteFile(filePath, []byte(newData), 0644)
 }
 
 func fetchExchangeRate(url string, resultChan chan<- string, errChan chan<- error) {
