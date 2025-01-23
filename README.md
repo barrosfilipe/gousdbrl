@@ -20,7 +20,7 @@ For `Linux/macOS`
 > Add this line to your `~/.bashrc`, `~/.bash_profile`, or `~/.zshrc`:
 
 ```bash
-export PATH=$PATH:$(go env GOPATH)/bin && source ~/.zshrc # or source ~/.bashrc
+export PATH=$PATH:$(go env GOPATH)/bin
 ```
 
 Then finally run:
