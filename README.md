@@ -2,6 +2,8 @@
 
 > Fetch USD to BRL exchange rate from [Wise](https://wise.com/)
 
+> **No API keys required!** :tada:
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/barrosfilipe/gousdbrl/refs/heads/main/demo.gif" />
 </p>
