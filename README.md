@@ -22,6 +22,10 @@ For `Linux/macOS`
 ```bash
 export PATH=$PATH:$(go env GOPATH)/bin
 ```
+> Reload your terminal configs by running
+```bash
+source ~/.bashrc # or source ~/.zshrc
+```
 
 Then finally run:
 
